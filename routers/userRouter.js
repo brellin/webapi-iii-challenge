@@ -52,7 +52,8 @@ userRouter.get('/user/:user_id', async (req, res) => {
 userRouter.post('/', firstCap, async (req, res) => {
     try {
         const newUser = await userDb.insert(req.body)
-        res.status(200).json(newUser)
+        const get = await userDb.get()
+        res.status(200).json(get)
     } catch (err) {
         console.log(err)
         res.status(500).json({
@@ -65,11 +66,9 @@ userRouter.put('/:id', firstCap, async (req, res) => {
     const { id } = req.params
     try {
         const edit = await userDb.update(id, req.body)
+        const get = await userDb.get()
         edit ?
-            res.status(200).json({
-                id: Number(id),
-                name: req.body.name
-            }) :
+            res.status(200).json(get) :
             res.status(400).json({
                 message: 'User does not exist'
             })

@@ -1,23 +1,28 @@
 import React from 'react';
 import Post from './Post'
-import NewPost from './NewPost'
+import User from './User'
+import NewPost from './Post/NewPost'
+import NewUser from './User/NewUser'
 import axios from 'axios'
 import './App.scss';
+
+const url = 'http://localhost:5000/api/'
 
 class App extends React.Component {
   state = {
     posts: [],
-    error: '',
-    newPost: false
+    users: [],
+    user: localStorage.getItem('bool') !== null ? JSON.parse(localStorage.getItem('bool')) : true,
+    newOne: false
   }
 
   componentDidMount() {
     axios
-      .get('http://localhost:5000/api/posts')
+      .get(`${url}${this.state.user ? 'users' : 'posts'}`)
       .then(res => {
         this.setState({
           ...this.state,
-          posts: res.data
+          [this.state.user ? 'users' : 'posts']: res.data
         })
       })
       .catch(err => {
@@ -25,14 +30,37 @@ class App extends React.Component {
       })
   }
 
-  addPost = post => {
+  switch = () => {
+    setTimeout(() => {
+      this.setState({
+        ...this.state,
+        user: !this.state.user
+      })
+
+      localStorage.setItem('bool', this.state.user)
+
+      axios
+        .get(`${url}${this.state.user ? 'users' : 'posts'}`)
+        .then(res => {
+          this.setState({
+            ...this.state,
+            [this.state.user ? 'users' : 'posts']: res.data
+          })
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }, 500)
+  }
+
+  add = sub => {
     axios
-      .post('http://localhost:5000/api/posts', post)
+      .post(`${url}${this.state.user ? 'users' : 'posts'}`, sub)
       .then(res => {
         console.log(res)
         this.setState({
           ...this.state,
-          posts: [...this.state.posts, res.data]
+          [this.state.user ? 'users' : 'posts']: res.data
         })
       })
       .catch(err => {
@@ -40,58 +68,64 @@ class App extends React.Component {
       })
   }
 
-  editPost = (postSub, id) => {
+  edit = (sub, id) => {
     axios
-      .put(`http://localhost:5000/api/posts/${id}`, postSub)
+      .put(`${url}${this.state.user ? 'users' : 'posts'}/${id}`, sub)
       .then(res => {
         this.setState({
           ...this.state,
-          posts: this.state.posts.map(post => {
-            if (post.id === id) {
-              post.title = postSub.title;
-              post.contents = postSub.contents;
-            }
-            return post
-          })
+          [this.state.user ? 'users' : 'posts']: res.data
         })
       })
       .catch(err => console.log(err))
   }
 
-  delPost = id => {
+  del = id => {
     axios
-      .delete(`http://localhost:5000/api/posts/${id}`)
+      .delete(`${url}${this.state.user ? 'users' : 'posts'}/${id}`)
       .then(res => {
         this.setState({
-          posts: this.state.posts.filter(post => post.id !== id)
+          ...this.state,
+          [this.state.user ? 'users' : 'posts']: res.data
         })
       })
       .catch(err => console.log(err))
   }
 
-  newPost = () => {
-    this.setState({ newPost: !this.state.newPost })
+  newOne = () => {
+    this.setState({ newOne: !this.state.newOne })
   }
 
   render() {
-    console.log(this.state.posts)
+    console.log(this.state)
     return (
       <div className="App">
         <header className="App-header">
-          <h1>Posts</h1>
+          <h1 onClick={() => this.switch()}>{this.state.user ?
+            'Users' :
+            'Posts'}</h1>
         </header>
 
         <section>
-          {!this.state.newPost ?
-            this.state.posts.map((post, id) => (
-              <Post post={post} editPost={this.editPost} delPost={this.delPost} key={id} />
-            )) :
-            <NewPost newPost={this.newPost} addPost={this.addPost} />
+          {!this.state.newOne ?
+            this.state.user ?
+              this.state.users.map((user, id) => (
+                <User user={user} edit={this.edit} del={this.del} key={id} />
+              ))
+              :
+              this.state.posts.map((post, id) => (
+                <Post post={post} edit={this.edit} del={this.del} key={id} />
+              ))
+            :
+            this.state.user ?
+              <NewUser newOne={this.newOne} add={this.add} />
+              :
+              <NewPost newOne={this.newOne} add={this.add} />
           }
           <button
-            onClick={() => this.newPost()}
+            onClick={() => this.newOne()}
             style={{
-              display: this.state.newPost ?
+              display: this.state.newOne ?
                 'none' : 'block'
             }}
           >New Post</button>

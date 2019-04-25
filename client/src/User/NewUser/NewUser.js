@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
 
-export default class NewPost extends Component {
+export default class NewUser extends Component {
     state = {
-        text: '',
-        user_id: ''
+        name: ''
     }
 
     handleChanges = e => {
@@ -14,25 +13,19 @@ export default class NewPost extends Component {
     }
 
     render() {
+        console.log(this.state)
         return (
             <>
                 <input
-                    name='text'
+                    name='name'
                     onChange={this.handleChanges}
-                    value={this.state.text}
-                />
-                <input
-                    name='user_id'
-                    onChange={this.handleChanges}
-                    value={this.state.user_id}
-                    type='number'
+                    value={this.state.name}
                 />
                 <button
                     onClick={() => {
                         this.props.add(this.state)
                         this.setState({
-                            text: '',
-                            user_id: ''
+                            name: ''
                         })
                         this.props.newOne()
                     }}

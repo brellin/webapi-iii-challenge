@@ -4,8 +4,8 @@ import './post.scss'
 class Post extends React.Component {
     state = {
         post: {
-            title: this.props.post.title,
-            contents: this.props.post.contents
+            text: this.props.post.text,
+            user_id: this.props.post.user_id
         },
         editing: false
     }
@@ -21,7 +21,7 @@ class Post extends React.Component {
     }
 
     editPost = () => {
-        this.props.editPost(this.state.post, this.props.post.id)
+        this.props.edit(this.state.post, this.props.post.id)
         this.setState({
             ...this.state,
             editing: false
@@ -45,26 +45,27 @@ class Post extends React.Component {
                 >Edit Post</button>
                 <p>Quote: {this.state.editing ?
                     <input
-                        name='title'
+                        name='text'
                         onChange={this.handleChanges}
-                        value={this.state.post.title}
+                        value={this.state.post.text}
                     /> :
-                    this.props.post.title
+                    this.props.post.text
                 }</p>
                 <p>Character: {this.state.editing ?
                     <input
-                        name='contents'
+                        name='user_id'
                         onChange={this.handleChanges}
-                        value={this.state.post.contents}
+                        value={this.state.post.user_id}
+                        type='number'
                     /> :
-                    this.props.post.contents
+                    this.props.post.user_id
                 }</p>
                 <button
                     style={{
                         display: this.state.editing ?
                             'none' : 'block'
                     }}
-                    onClick={() => this.props.delPost(this.props.post.id)}
+                    onClick={() => this.props.del(this.props.post.id)}
                 >Delete</button>
                 <button
                     style={{

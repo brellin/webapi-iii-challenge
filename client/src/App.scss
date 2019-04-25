@@ -17,6 +17,12 @@
             font-size: 4rem;
             color: #00ff00;
             text-shadow: #191970 5px 10px 7.5px;
+            transition: 1s ease-out;
+
+            &:hover {
+                cursor: pointer;
+                transform: scale(1.1);
+            }
         }
     }
 
