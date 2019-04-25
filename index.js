@@ -1,5 +1,9 @@
+require('dotenv').config()
+
 const server = require('./server')
 
-server.listen(5000, () => {
-    console.log('\n=============================\n Server running on port 5000\n=============================\n')
+const port = process.env.PORT || 5000
+
+server.listen(port, () => {
+    console.log(`\n=============================\n Server running on port ${port}\n=============================\n`)
 })
