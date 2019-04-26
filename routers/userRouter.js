@@ -21,7 +21,8 @@ userRouter.get('/:id', async (req, res) => {
     try {
         const user = await userDb.getById(id)
         user ?
-            res.status(200).json(user) :
+            res.status(200).json(user)
+            :
             res.status(400).json({
                 message: 'User does not exist'
             })
@@ -32,12 +33,13 @@ userRouter.get('/:id', async (req, res) => {
     }
 })
 
-userRouter.get('/user/:user_id', async (req, res) => {
-    const { user_id } = req.params
+userRouter.get('/user/:id', async (req, res) => {
+    const { id } = req.params
     try {
-        const userPosts = await userDb.getUserPosts(user_id)
+        const userPosts = await userDb.getUserPosts(id)
         userPosts ?
-            res.status(200).json(userPosts) :
+            res.status(200).json(userPosts)
+            :
             res.status(400).json({
                 message: 'User does not exist or does not have any posts yet'
             })
@@ -68,7 +70,8 @@ userRouter.put('/:id', firstCap, async (req, res) => {
         const edit = await userDb.update(id, req.body)
         const get = await userDb.get()
         edit ?
-            res.status(200).json(get) :
+            res.status(200).json(get)
+            :
             res.status(400).json({
                 message: 'User does not exist'
             })
@@ -86,7 +89,8 @@ userRouter.delete('/:id', async (req, res) => {
         const del = await userDb.remove(id)
         const get = await userDb.get(req.query)
         del ?
-            res.status(200).json(get) :
+            res.status(200).json(get)
+            :
             res.status(400).json({
                 message: 'User does not exist'
             })

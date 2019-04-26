@@ -15,12 +15,13 @@ postRouter.get('/', async (req, res) => {
     }
 })
 
-postRouter.get('/user:user_id', async (req, res) => {
-    const { user_id } = req.params
+postRouter.get('/user:id', async (req, res) => {
+    const { id } = req.params
     try {
-        const posts = await postDb.getByUserId(user_id)
+        const posts = await postDb.getByUserId(id)
         posts ?
-            res.status(200).json(posts) :
+            res.status(200).json(posts)
+            :
             res.status(400).json({
                 message: 'User does not exist or have any posts yet.'
             })
@@ -37,7 +38,8 @@ postRouter.get('/:id', async (req, res) => {
     try {
         const post = await postDb.getById(id)
         post ?
-            res.status(200).json(post) :
+            res.status(200).json(post)
+            :
             res.status(400).json({
                 message: 'Post does not exist.'
             })
@@ -68,7 +70,8 @@ postRouter.delete('/:id', async (req, res) => {
         const del = await postDb.remove(id)
         const get = await postDb.get(req.query)
         del ?
-            res.status(200).json(get) :
+            res.status(200).json(get)
+            :
             res.status(400).json({
                 message: 'Post does not exist.'
             })
@@ -86,7 +89,8 @@ postRouter.put('/:id', async (req, res) => {
         const update = await postDb.update(id, body)
         const get = await postDb.get(req.query)
         update ?
-            res.status(200).json(get) :
+            res.status(200).json(get)
+            :
             res.status(400).json({
                 message: 'Post does not exist.'
             })
