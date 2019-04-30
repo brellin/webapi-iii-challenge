@@ -2,6 +2,7 @@ const db = require('../dbConfig.js');
 
 module.exports = {
   get,
+  getByUserId,
   getById,
   insert,
   update,
@@ -10,6 +11,13 @@ module.exports = {
 
 function get() {
   return db('posts');
+}
+
+function getByUserId(user_id) {
+  return db('posts as p')
+    .join('users as u', 'u.id', 'p.user_id')
+    .select('p.id', 'p.text', 'u.name as postedBy')
+    .where({ user_id })
 }
 
 function getById(id) {
